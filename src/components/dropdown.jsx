@@ -1,4 +1,3 @@
-import { render } from "@testing-library/react";
 import "bootstrap/dist/css/bootstrap.css";
 import Dropdown from "react-bootstrap/Dropdown";
 import React, { Component } from "react";

@@ -5,7 +5,7 @@ function NavBar({ totalCounters, nextRunes, totalRunes }) {
   return (
     <div>
       <nav className="navbar navbar-light bg-light">
-        <a className="navbar-brand" href="#">
+        <a className="navbar-brand" href="/#">
           Elden Ring Level Calculator{" "}
         </a>
       </nav>
