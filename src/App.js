@@ -157,7 +157,7 @@ class App extends Component {
   calculateRunes = (currentLevel) => {
     let nextRunes;
     if (currentLevel > 11) {
-      // currentLevel++;
+      currentLevel++;
       nextRunes =
         0.02 * currentLevel ** 3 +
         3.06 * currentLevel ** 2 +
