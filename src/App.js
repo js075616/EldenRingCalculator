@@ -16,7 +16,7 @@ class App extends Component {
       { name: "Faith", value: 10, minValue: 10 },
       { name: "Arcane", value: 10, minValue: 10 },
     ],
-    earlyRunes: [0, 673, 689, 706, 723, 740, 757, 775, 793, 811, 829],
+    earlyRunes: [673, 689, 706, 723, 740, 757, 775, 793, 811, 829, 847],
     startingLevel: 1,
     nextRunes: 0,
     dropName: "Select your Starting Class (Wretch)",
@@ -155,19 +155,20 @@ class App extends Component {
   };
 
   calculateRunes = (currentLevel) => {
-    // currentLevel++;
     let nextRunes;
     if (currentLevel > 11) {
+      // currentLevel++;
       nextRunes =
         0.02 * currentLevel ** 3 +
         3.06 * currentLevel ** 2 +
         105.6 * currentLevel -
         895;
     } else {
+      currentLevel--;
       nextRunes = this.state.earlyRunes[currentLevel];
     }
     // nextRunes = Math.round(nextRunes);
-    return nextRunes;
+    return Math.round(nextRunes);
   };
 
   calculateTotalRunes = (currentLevel, startingLevel) => {
@@ -176,7 +177,7 @@ class App extends Component {
       totalRunes = totalRunes + this.calculateRunes(i - 1);
       // console.log("Total runes: ", totalRunes);
     }
-    return Math.round(totalRunes);
+    return totalRunes;
   };
 
   render() {
@@ -185,7 +186,7 @@ class App extends Component {
       <React.Fragment>
         <NavBar
           totalCounters={this.calculateLevel()}
-          nextRunes={Math.round(this.calculateRunes(this.calculateLevel()))}
+          nextRunes={this.calculateRunes(this.calculateLevel())}
           totalRunes={this.calculateTotalRunes(
             this.calculateLevel(),
             this.state.startingLevel
