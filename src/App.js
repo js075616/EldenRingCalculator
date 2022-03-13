@@ -16,9 +16,8 @@ class App extends Component {
       { name: "Faith", value: 10, minValue: 10 },
       { name: "Arcane", value: 10, minValue: 10 },
     ],
-    earlyRunes: [0, 0, 673, 689, 706, 723, 740, 757, 775, 793, 811, 829],
+    earlyRunes: [0, 673, 689, 706, 723, 740, 757, 775, 793, 811, 829],
     startingLevel: 1,
-    totalRunes: 0,
     nextRunes: 0,
     dropName: "Select your Starting Class (Wretch)",
   };
@@ -156,9 +155,8 @@ class App extends Component {
   };
 
   calculateRunes = (currentLevel) => {
-    currentLevel++;
+    // currentLevel++;
     let nextRunes;
-    let totalRunes;
     if (currentLevel > 11) {
       nextRunes =
         0.02 * currentLevel ** 3 +
@@ -172,9 +170,9 @@ class App extends Component {
     return nextRunes;
   };
 
-  calculateTotalRunes = (currentLevel) => {
+  calculateTotalRunes = (currentLevel, startingLevel) => {
     let totalRunes = 0;
-    for (let i = 2; i <= currentLevel + 1; i++) {
+    for (let i = startingLevel + 1; i <= currentLevel; i++) {
       totalRunes = totalRunes + this.calculateRunes(i - 1);
       // console.log("Total runes: ", totalRunes);
     }
@@ -188,7 +186,10 @@ class App extends Component {
         <NavBar
           totalCounters={this.calculateLevel()}
           nextRunes={Math.round(this.calculateRunes(this.calculateLevel()))}
-          totalRunes={this.calculateTotalRunes(this.calculateLevel())}
+          totalRunes={this.calculateTotalRunes(
+            this.calculateLevel(),
+            this.state.startingLevel
+          )}
         />
         <DropDown dropName={this.state.dropName} onSelect={this.handleSelect} />
         <main className="container"></main>
@@ -205,7 +206,7 @@ class App extends Component {
         </h6>
         <h6 className="text-muted m-2">
           Created by Jake Schwarz, with information from the{" "}
-          <a href="https://eldenring.wiki.fextralife.com/Elden+Ring+Wiki">
+          <a href={"https://eldenring.wiki.fextralife.com/Elden+Ring+Wiki/"}>
             Elden Ring Wiki
           </a>
         </h6>
