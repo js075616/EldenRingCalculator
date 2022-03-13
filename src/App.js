@@ -202,7 +202,10 @@ class App extends Component {
         />
         <h6 className="text-muted m-2">
           Note: The rune values are approximate due to the nature of JavaScript
-          rounding. Should be pretty close though.
+          rounding. Report any issues{" "}
+          <a href={"https://github.com/js075616/EldenRingCalculator/issues"}>
+            here.
+          </a>
         </h6>
         <h6 className="text-muted m-2">
           Created by Jake Schwarz, with information from the{" "}
