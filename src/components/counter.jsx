@@ -1,9 +1,24 @@
 import React, { Component } from "react";
 
 class Counter extends Component {
-  render() {
-    // console.log("Counter - Rendered");
+  constructor(props) {
+    super(props);
+    this.state = { value: this.props.counter.value };
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
 
+  handleChange(event) {
+    this.setState({ value: event.target.value });
+  }
+
+  handleSubmit(event) {
+    // alert("A name was submitted: " + this.state.value);
+    event.preventDefault();
+    this.props.onSubmit(this.props.counter, this.state.value);
+  }
+
+  render() {
     return (
       <div>
         <h5 className="span ml-2">{this.props.counter.name}</h5>
@@ -23,14 +38,15 @@ class Counter extends Component {
           >
             -
           </button>
+          <form onSubmit={this.handleSubmit}>
+            <input
+              type="text"
+              // placeholder="Enter stat"
+              value={this.state.value}
+              onChange={this.handleChange}
+            />
+          </form>
         </h5>
-
-        {/* <button
-          onClick={() => this.props.onDelete(this.props.counter.id)}
-          className="btn btn-danger btn-sm m-2"
-        >
-          Delete
-        </button> */}
       </div>
     );
   }

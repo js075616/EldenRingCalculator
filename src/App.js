@@ -7,14 +7,14 @@ import DropDown from "./components/dropdown";
 class App extends Component {
   state = {
     counters: [
-      { name: "Vigor", value: 10, minValue: 10 },
-      { name: "Mind", value: 10, minValue: 10 },
-      { name: "Endurance", value: 10, minValue: 10 },
-      { name: "Strength", value: 10, minValue: 10 },
-      { name: "Dexterity", value: 10, minValue: 10 },
-      { name: "Intelligence", value: 10, minValue: 10 },
-      { name: "Faith", value: 10, minValue: 10 },
-      { name: "Arcane", value: 10, minValue: 10 },
+      { name: "Vigor", value: 10, minValue: 10, input: "" },
+      { name: "Mind", value: 10, minValue: 10, input: "" },
+      { name: "Endurance", value: 10, minValue: 10, input: "" },
+      { name: "Strength", value: 10, minValue: 10, input: "" },
+      { name: "Dexterity", value: 10, minValue: 10, input: "" },
+      { name: "Intelligence", value: 10, minValue: 10, input: "" },
+      { name: "Faith", value: 10, minValue: 10, input: "" },
+      { name: "Arcane", value: 10, minValue: 10, input: "" },
     ],
     earlyRunes: [673, 689, 706, 723, 740, 757, 775, 793, 811, 829, 847],
     startingLevel: 1,
@@ -31,19 +31,6 @@ class App extends Component {
   //   // Ajax Call
   //   // console.log("App - Mounted");
   // }
-
-  // handleDelete = (counterId) => {
-  //   const counters = this.state.counters.filter((c) => c.id !== counterId);
-  //   this.setState({ counters });
-  // };
-
-  // handleReset = () => {
-  //   const counters = this.state.counters.map((c) => {
-  //     c.value = 0;
-  //     return c;
-  //   });
-  //   this.setState({ counters });
-  // };
 
   handleIncrement = (counter) => {
     const counters = [...this.state.counters];
@@ -145,6 +132,23 @@ class App extends Component {
     this.setState({ counters, startingLevel, dropName });
   };
 
+  // handleChange = (counter, event) => {
+  //   const counters = [...this.state.counters];
+  //   const index = counters.indexOf(counter);
+  //   counters[index] = { ...counter };
+  //   counters[index].input = event.target.input;
+  //   this.setState({ counters });
+  // };
+
+  handleSubmit = (counter, value) => {
+    const counters = [...this.state.counters];
+    const index = counters.indexOf(counter);
+    counters[index] = { ...counter };
+    counters[index].value = value;
+    console.log("Value: ", value);
+    this.setState({ counters });
+  };
+
   calculateLevel = () => {
     let count = this.state.startingLevel;
     const counters = [...this.state.counters];
@@ -199,6 +203,8 @@ class App extends Component {
           // onReset={this.handleReset}
           onIncrement={this.handleIncrement}
           onDecrement={this.handleDecrement}
+          // onChange={this.handleChange}
+          onSubmit={this.handleSubmit}
           // onDelete={this.handleDelete}
         />
         <h6 className="text-muted m-2">
