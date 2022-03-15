@@ -20,12 +20,16 @@ class App extends Component {
     startingLevel: 1,
     nextRunes: 0,
     dropName: "Select your Starting Class (Wretch)",
+    actualLevel: 0,
+    actualLevelInput: 0,
   };
 
-  // constructor() {
-  //   super();
-  //   // console.log("App - Constructor");
-  // }
+  constructor() {
+    super();
+    this.handleCurrentChange = this.handleCurrentChange.bind(this);
+    this.handleCurrentSubmit = this.handleCurrentSubmit.bind(this);
+    // console.log("App - Constructor");
+  }
 
   // componentDidMount() {
   //   // Ajax Call
@@ -132,22 +136,31 @@ class App extends Component {
     this.setState({ counters, startingLevel, dropName });
   };
 
-  // handleChange = (counter, event) => {
-  //   const counters = [...this.state.counters];
-  //   const index = counters.indexOf(counter);
-  //   counters[index] = { ...counter };
-  //   counters[index].input = event.target.input;
-  //   this.setState({ counters });
-  // };
-
   handleSubmit = (counter, value) => {
-    const counters = [...this.state.counters];
-    const index = counters.indexOf(counter);
-    counters[index] = { ...counter };
-    counters[index].value = value;
-    console.log("Value: ", value);
-    this.setState({ counters });
+    if (value < 100 && value >= counter.minValue) {
+      const counters = [...this.state.counters];
+      const index = counters.indexOf(counter);
+      counters[index] = { ...counter };
+      counters[index].value = value;
+      this.setState({ counters });
+    } else {
+      alert(`The stat be between ${counter.minValue} and 99`);
+    }
+    // console.log("Value: ", value);
   };
+
+  handleCurrentChange(event) {
+    this.setState({ actualLevelInput: event.target.value });
+    // console.log(this.state.actualLevelInput);
+  }
+
+  handleCurrentSubmit(event) {
+    console.log("Actual level input: ", this.state.actualLevelInput);
+    event.preventDefault();
+    const actualLevel = this.state.actualLevelInput;
+    this.setState({ actualLevel });
+    console.log(this.state.actualLevel);
+  }
 
   calculateLevel = () => {
     let count = this.state.startingLevel;
@@ -177,11 +190,22 @@ class App extends Component {
 
   calculateTotalRunes = (currentLevel, startingLevel) => {
     let totalRunes = 0;
+    let subtractRunes = 0;
     for (let i = startingLevel + 1; i <= currentLevel; i++) {
       totalRunes = totalRunes + this.calculateRunes(i - 1);
       // console.log("Total runes: ", totalRunes);
     }
-    return totalRunes;
+    if (this.state.actualLevel !== 0) {
+      for (let i = startingLevel + 1; i <= this.state.actualLevel; i++) {
+        subtractRunes = subtractRunes + this.calculateRunes(i - 1);
+      }
+    }
+    totalRunes = totalRunes - subtractRunes;
+    if (totalRunes < 0) {
+      return 0;
+    } else {
+      return totalRunes;
+    }
   };
 
   render() {
@@ -196,7 +220,24 @@ class App extends Component {
             this.state.startingLevel
           )}
         />
-        <DropDown dropName={this.state.dropName} onSelect={this.handleSelect} />
+        <div>
+          <DropDown
+            dropName={this.state.dropName}
+            onSelect={this.handleSelect}
+            className="col-md-0 padding-0"
+          />{" "}
+          <form
+            onSubmit={this.handleCurrentSubmit}
+            className="col-md-0 padding-0 mt-1 ml-5 mb-1"
+          >
+            <input
+              type="number"
+              placeholder="Enter current level"
+              // value={this.state.value}
+              onChange={this.handleCurrentChange}
+            />
+          </form>
+        </div>
         <main className="container"></main>
         <Counters
           counters={this.state.counters}

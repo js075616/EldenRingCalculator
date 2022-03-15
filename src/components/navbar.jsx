@@ -11,10 +11,10 @@ function NavBar({ totalCounters, nextRunes, totalRunes }) {
       </nav>
       <h4>
         <span className="badge badge-pill badge-success ml-2">
-          Current Level: {totalCounters}
+          Calculated Level: {totalCounters}
         </span>
         <span className="badge badge-pill badge-info ml-2">
-          Total Runes for Current Level: {totalRunes}
+          Total Runes for Calculated Level: {totalRunes}
         </span>
         <span className="badge badge-pill badge-info ml-2">
           Runes for Next Level: {nextRunes}

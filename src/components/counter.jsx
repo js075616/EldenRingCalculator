@@ -46,7 +46,7 @@ class Counter extends Component {
           className="col-md-0 padding-0 mt-1 ml-1"
         >
           <input
-            type="text"
+            type="number"
             placeholder="Enter stat"
             // value={this.state.value}
             onChange={this.handleChange}
