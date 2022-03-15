@@ -20,10 +20,12 @@ class Counter extends Component {
 
   render() {
     return (
-      <div>
-        <h5 className="span ml-2">{this.props.counter.name}</h5>
-        <h5 className="h5 ml-2=1">
-          <span className={this.getBadgeClasses()}>
+      <div className="row ml-1">
+        <h5 className="col-md-1 padding-0 span mt-2 auto">
+          {this.props.counter.name}
+        </h5>
+        <h5 className="col-md-0 padding-0 mb-2">
+          <span className="badge badge-pill m-2 badge-primary">
             {this.props.counter.value}
           </span>
           <button
@@ -38,22 +40,20 @@ class Counter extends Component {
           >
             -
           </button>
-          <form onSubmit={this.handleSubmit}>
-            <input
-              type="text"
-              // placeholder="Enter stat"
-              value={this.state.value}
-              onChange={this.handleChange}
-            />
-          </form>
         </h5>
+        <form
+          onSubmit={this.handleSubmit}
+          className="col-md-0 padding-0 mt-1 ml-1"
+        >
+          <input
+            type="text"
+            placeholder="Enter stat"
+            // value={this.state.value}
+            onChange={this.handleChange}
+          />
+        </form>
       </div>
     );
-  }
-
-  getBadgeClasses() {
-    let classes = "badge badge-pill m-2 badge-primary";
-    return classes;
   }
 }
 
