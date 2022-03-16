@@ -7,43 +7,36 @@ import DropDown from "./components/dropdown";
 class App extends Component {
   state = {
     counters: [
-      { name: "Vigor", value: 10, minValue: 10 },
-      { name: "Mind", value: 10, minValue: 10 },
-      { name: "Endurance", value: 10, minValue: 10 },
-      { name: "Strength", value: 10, minValue: 10 },
-      { name: "Dexterity", value: 10, minValue: 10 },
-      { name: "Intelligence", value: 10, minValue: 10 },
-      { name: "Faith", value: 10, minValue: 10 },
-      { name: "Arcane", value: 10, minValue: 10 },
+      { name: "Vigor", value: 10, minValue: 10, input: "" },
+      { name: "Mind", value: 10, minValue: 10, input: "" },
+      { name: "Endurance", value: 10, minValue: 10, input: "" },
+      { name: "Strength", value: 10, minValue: 10, input: "" },
+      { name: "Dexterity", value: 10, minValue: 10, input: "" },
+      { name: "Intelligence", value: 10, minValue: 10, input: "" },
+      { name: "Faith", value: 10, minValue: 10, input: "" },
+      { name: "Arcane", value: 10, minValue: 10, input: "" },
     ],
     earlyRunes: [673, 689, 706, 723, 740, 757, 775, 793, 811, 829, 847],
     startingLevel: 1,
     nextRunes: 0,
-    dropName: "Select your Starting Class (Wretch)",
+    dropName: "Starting Class (Wretch)",
+    actualLevel: 0,
+    actualLevelInput: 0,
+    // rebirthMode: false,
+    // rebirthCounter: 0,
   };
 
-  // constructor() {
-  //   super();
-  //   // console.log("App - Constructor");
-  // }
+  constructor() {
+    super();
+    this.handleCurrentChange = this.handleCurrentChange.bind(this);
+    this.handleCurrentSubmit = this.handleCurrentSubmit.bind(this);
+    // console.log("App - Constructor");
+  }
 
   // componentDidMount() {
   //   // Ajax Call
   //   // console.log("App - Mounted");
   // }
-
-  // handleDelete = (counterId) => {
-  //   const counters = this.state.counters.filter((c) => c.id !== counterId);
-  //   this.setState({ counters });
-  // };
-
-  // handleReset = () => {
-  //   const counters = this.state.counters.map((c) => {
-  //     c.value = 0;
-  //     return c;
-  //   });
-  //   this.setState({ counters });
-  // };
 
   handleIncrement = (counter) => {
     const counters = [...this.state.counters];
@@ -145,6 +138,43 @@ class App extends Component {
     this.setState({ counters, startingLevel, dropName });
   };
 
+  handleSubmit = (counter, value) => {
+    if (value < 100 && value >= counter.minValue) {
+      const counters = [...this.state.counters];
+      const index = counters.indexOf(counter);
+      counters[index] = { ...counter };
+      counters[index].value = value;
+      this.setState({ counters });
+    } else {
+      alert(`The stat be between ${counter.minValue} and 99`);
+    }
+    // console.log("Value: ", value);
+  };
+
+  handleCurrentChange(event) {
+    this.setState({ actualLevelInput: event.target.value });
+    // console.log(this.state.actualLevelInput);
+  }
+
+  handleCurrentSubmit(event) {
+    console.log("Actual level input: ", this.state.actualLevelInput);
+    event.preventDefault();
+    const actualLevel = this.state.actualLevelInput;
+    this.setState({ actualLevel });
+    console.log(this.state.actualLevel);
+  }
+
+  // handleCheck = () => {
+  //   if (this.state.rebirthMode === false) {
+  //     const rebirthMode = true;
+  //     this.setState({ rebirthMode });
+  //   } else {
+  //     const rebirthMode = false;
+  //     this.setState({ rebirthMode });
+  //   }
+  //   console.log(this.state.rebirthMode);
+  // };
+
   calculateLevel = () => {
     let count = this.state.startingLevel;
     const counters = [...this.state.counters];
@@ -173,11 +203,22 @@ class App extends Component {
 
   calculateTotalRunes = (currentLevel, startingLevel) => {
     let totalRunes = 0;
+    let subtractRunes = 0;
     for (let i = startingLevel + 1; i <= currentLevel; i++) {
       totalRunes = totalRunes + this.calculateRunes(i - 1);
       // console.log("Total runes: ", totalRunes);
     }
-    return totalRunes;
+    if (this.state.actualLevel !== 0) {
+      for (let i = startingLevel + 1; i <= this.state.actualLevel; i++) {
+        subtractRunes = subtractRunes + this.calculateRunes(i - 1);
+      }
+    }
+    totalRunes = totalRunes - subtractRunes;
+    if (totalRunes < 0) {
+      return 0;
+    } else {
+      return totalRunes;
+    }
   };
 
   render() {
@@ -186,21 +227,55 @@ class App extends Component {
       <React.Fragment>
         <NavBar
           totalCounters={this.calculateLevel()}
+          actualLevel={this.state.actualLevel}
           nextRunes={this.calculateRunes(this.calculateLevel())}
           totalRunes={this.calculateTotalRunes(
             this.calculateLevel(),
             this.state.startingLevel
           )}
         />
-        <DropDown dropName={this.state.dropName} onSelect={this.handleSelect} />
+        <div className="ml-2 row">
+          <DropDown
+            dropName={this.state.dropName}
+            onSelect={this.handleSelect}
+            className="col col-md-2"
+          />
+          <form
+            onSubmit={this.handleCurrentSubmit}
+            className="mt-8 ml-3 mb-1 p-0"
+          >
+            <input
+              type="number"
+              placeholder="Enter actual level"
+              // value={this.state.value}
+              onChange={this.handleCurrentChange}
+              className="mt-3"
+            />
+            {/* <label>
+              <input
+                type="checkbox"
+                className="m-2 p-2"
+                checked={this.state.rebirthMode}
+                onChange={this.handleCheck}
+              />
+              Rebirth
+            </label> */}
+          </form>
+        </div>
         <main className="container"></main>
         <Counters
           counters={this.state.counters}
           // onReset={this.handleReset}
           onIncrement={this.handleIncrement}
           onDecrement={this.handleDecrement}
+          // onChange={this.handleChange}
+          onSubmit={this.handleSubmit}
           // onDelete={this.handleDelete}
         />
+        <h6 className="  m-2">
+          Enter the actual level of your character to determine how many runes
+          it will take to get to the calculated level.
+        </h6>
         <h6 className="text-muted m-2">
           Note: The rune values are approximate due to the nature of JavaScript
           rounding. Report any issues{" "}

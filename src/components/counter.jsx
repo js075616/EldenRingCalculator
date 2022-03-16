@@ -1,14 +1,31 @@
 import React, { Component } from "react";
 
 class Counter extends Component {
-  render() {
-    // console.log("Counter - Rendered");
+  constructor(props) {
+    super(props);
+    this.state = { value: this.props.counter.value };
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
 
+  handleChange(event) {
+    this.setState({ value: event.target.value });
+  }
+
+  handleSubmit(event) {
+    // alert("A name was submitted: " + this.state.value);
+    event.preventDefault();
+    this.props.onSubmit(this.props.counter, this.state.value);
+  }
+
+  render() {
     return (
-      <div>
-        <h5 className="span ml-2">{this.props.counter.name}</h5>
-        <h5 className="h5 ml-2=1">
-          <span className={this.getBadgeClasses()}>
+      <div className="row ml-1">
+        <h5 className="col-md-1 padding-0 span mt-2 auto">
+          {this.props.counter.name}
+        </h5>
+        <h5 className="col-md-0 padding-0 mb-2">
+          <span className="badge badge-pill m-2 badge-primary">
             {this.props.counter.value}
           </span>
           <button
@@ -24,20 +41,19 @@ class Counter extends Component {
             -
           </button>
         </h5>
-
-        {/* <button
-          onClick={() => this.props.onDelete(this.props.counter.id)}
-          className="btn btn-danger btn-sm m-2"
+        <form
+          onSubmit={this.handleSubmit}
+          className="col-md-0 padding-0 mt-1 ml-1"
         >
-          Delete
-        </button> */}
+          <input
+            type="number"
+            placeholder="Enter stat"
+            // value={this.state.value}
+            onChange={this.handleChange}
+          />
+        </form>
       </div>
     );
-  }
-
-  getBadgeClasses() {
-    let classes = "badge badge-pill m-2 badge-primary";
-    return classes;
   }
 }
 
