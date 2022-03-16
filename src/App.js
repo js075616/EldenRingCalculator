@@ -19,9 +19,11 @@ class App extends Component {
     earlyRunes: [673, 689, 706, 723, 740, 757, 775, 793, 811, 829, 847],
     startingLevel: 1,
     nextRunes: 0,
-    dropName: "Select your Starting Class (Wretch)",
+    dropName: "Starting Class (Wretch)",
     actualLevel: 0,
     actualLevelInput: 0,
+    // rebirthMode: false,
+    // rebirthCounter: 0,
   };
 
   constructor() {
@@ -162,6 +164,17 @@ class App extends Component {
     console.log(this.state.actualLevel);
   }
 
+  // handleCheck = () => {
+  //   if (this.state.rebirthMode === false) {
+  //     const rebirthMode = true;
+  //     this.setState({ rebirthMode });
+  //   } else {
+  //     const rebirthMode = false;
+  //     this.setState({ rebirthMode });
+  //   }
+  //   console.log(this.state.rebirthMode);
+  // };
+
   calculateLevel = () => {
     let count = this.state.startingLevel;
     const counters = [...this.state.counters];
@@ -214,28 +227,39 @@ class App extends Component {
       <React.Fragment>
         <NavBar
           totalCounters={this.calculateLevel()}
+          actualLevel={this.state.actualLevel}
           nextRunes={this.calculateRunes(this.calculateLevel())}
           totalRunes={this.calculateTotalRunes(
             this.calculateLevel(),
             this.state.startingLevel
           )}
         />
-        <div>
+        <div className="ml-2 row">
           <DropDown
             dropName={this.state.dropName}
             onSelect={this.handleSelect}
-            className="col-md-0 padding-0"
-          />{" "}
+            className="col col-md-2"
+          />
           <form
             onSubmit={this.handleCurrentSubmit}
-            className="col-md-0 padding-0 mt-1 ml-5 mb-1"
+            className="mt-8 ml-3 mb-1 p-0"
           >
             <input
               type="number"
-              placeholder="Enter current level"
+              placeholder="Enter actual level"
               // value={this.state.value}
               onChange={this.handleCurrentChange}
+              className="mt-3"
             />
+            {/* <label>
+              <input
+                type="checkbox"
+                className="m-2 p-2"
+                checked={this.state.rebirthMode}
+                onChange={this.handleCheck}
+              />
+              Rebirth
+            </label> */}
           </form>
         </div>
         <main className="container"></main>
@@ -248,6 +272,10 @@ class App extends Component {
           onSubmit={this.handleSubmit}
           // onDelete={this.handleDelete}
         />
+        <h6 className="  m-2">
+          Enter the actual level of your character to determine how many runes
+          it will take to get to the calculated level.
+        </h6>
         <h6 className="text-muted m-2">
           Note: The rune values are approximate due to the nature of JavaScript
           rounding. Report any issues{" "}
