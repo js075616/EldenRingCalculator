@@ -102,6 +102,7 @@ class App extends Component {
     return counters;
   };
 
+  // TODO: add reset for rebirth and actual level when the starting class is changed
   handleSelect = (selection) => {
     // console.log("Selected", selection);
     let counters;
@@ -204,8 +205,12 @@ class App extends Component {
     // console.log("Actual level input: ", this.state.actualLevelInput);
     event.preventDefault();
     let actualLevel = this.state.actualLevelInput;
-    if (actualLevel < 714 && actualLevel >= 0) {
+    if (actualLevel < 714 && actualLevel > this.state.startingLevel) {
       const rebirthCounter = actualLevel - this.state.startingLevel;
+      this.setState({ actualLevel, rebirthCounter });
+    } else {
+      actualLevel = 0;
+      const rebirthCounter = 0;
       this.setState({ actualLevel, rebirthCounter });
     }
     // console.log(this.state.actualLevel);
@@ -213,7 +218,10 @@ class App extends Component {
 
   handleCheck = () => {
     let rebirthMode = false;
-    const rebirthCounter = this.state.actualLevel - this.state.startingLevel;
+    if (this.state.actualLevel > this.state.startingLevel) {
+      const rebirthCounter = this.state.actualLevel - this.state.startingLevel;
+      this.setState({ rebirthCounter });
+    }
     if (this.state.rebirthMode === false) {
       rebirthMode = true;
     }
@@ -221,7 +229,7 @@ class App extends Component {
     counters.forEach((counter) => {
       counter.value = counter.minValue;
     });
-    this.setState({ rebirthMode, counters, rebirthCounter });
+    this.setState({ rebirthMode, counters });
     // console.log(this.state.rebirthMode);
   };
 
