@@ -41,27 +41,51 @@ class App extends Component {
   handleIncrement = (counter) => {
     const counters = [...this.state.counters];
     const index = counters.indexOf(counter);
-    let rebirthCounter = this.state.rebirthCounter;
-    rebirthCounter--;
-    counters[index] = { ...counter };
-    counters[index].value++;
-    if (counters[index].value > 99) {
-      counters[index].value = 99;
+
+    if (this.state.rebirthMode) {
+      let rebirthCounter = this.state.rebirthCounter;
+      if (rebirthCounter > 0) {
+        rebirthCounter--;
+        counters[index] = { ...counter };
+        counters[index].value++;
+        if (counters[index].value > 99) {
+          counters[index].value = 99;
+        }
+      }
+      this.setState({ counters, rebirthCounter });
+    } else {
+      counters[index] = { ...counter };
+      counters[index].value++;
+      if (counters[index].value > 99) {
+        counters[index].value = 99;
+      }
+      this.setState({ counters });
     }
-    this.setState({ counters, rebirthCounter });
   };
 
   handleDecrement = (counter) => {
     const counters = [...this.state.counters];
     const index = counters.indexOf(counter);
-    let rebirthCounter = this.state.rebirthCounter;
-    rebirthCounter++;
-    counters[index] = { ...counter };
-    counters[index].value--;
-    if (counters[index].value < counters[index].minValue) {
-      counters[index].value = counters[index].minValue;
+
+    if (this.state.rebirthMode) {
+      let rebirthCounter = this.state.rebirthCounter;
+      if (counters[index].value > counters[index].minValue) {
+        rebirthCounter++;
+        counters[index] = { ...counter };
+        counters[index].value--;
+        if (counters[index].value < counters[index].minValue) {
+          counters[index].value = counters[index].minValue;
+        }
+      }
+      this.setState({ counters, rebirthCounter });
+    } else {
+      counters[index] = { ...counter };
+      counters[index].value--;
+      if (counters[index].value < counters[index].minValue) {
+        counters[index].value = counters[index].minValue;
+      }
+      this.setState({ counters });
     }
-    this.setState({ counters, rebirthCounter });
   };
 
   handleCounterUpdate = (valueArray) => {
@@ -137,7 +161,7 @@ class App extends Component {
       default:
         counters = this.handleCounterUpdate([0, 0, 0, 0, 0, 0, 0, 0]);
         startingLevel = 0;
-        dropName = "Select your Starting Class";
+        dropName = "Starting Class";
     }
     this.setState({ counters, startingLevel, dropName });
   };
@@ -146,9 +170,24 @@ class App extends Component {
     if (value < 100 && value >= counter.minValue) {
       const counters = [...this.state.counters];
       const index = counters.indexOf(counter);
+
+      let rebirthCounter = this.state.rebirthCounter;
       counters[index] = { ...counter };
-      counters[index].value = value;
-      this.setState({ counters });
+      rebirthCounter += counters[index].value - counters[index].minValue;
+      if (this.state.rebirthMode) {
+        console.log("Rebirth addition", rebirthCounter);
+        console.log(
+          "Rebirth subtraction",
+          rebirthCounter - value + counters[index].minValue
+        );
+        if (rebirthCounter - value + counters[index].minValue >= 0) {
+          counters[index].value = value;
+          rebirthCounter -= value - counters[index].minValue;
+        }
+      } else {
+        counters[index].value = value;
+      }
+      this.setState({ counters, rebirthCounter });
     } else {
       alert(`The stat must be between ${counter.minValue} and 99`);
     }
@@ -165,7 +204,7 @@ class App extends Component {
     // console.log("Actual level input: ", this.state.actualLevelInput);
     event.preventDefault();
     let actualLevel = this.state.actualLevelInput;
-    if (actualLevel < 714 && actualLevel >= this.state.startingLevel) {
+    if (actualLevel < 714 && actualLevel >= 0) {
       const rebirthCounter = actualLevel - this.state.startingLevel;
       this.setState({ actualLevel, rebirthCounter });
     }
@@ -173,14 +212,17 @@ class App extends Component {
   }
 
   handleCheck = () => {
+    let rebirthMode = false;
+    const rebirthCounter = this.state.actualLevel - this.state.startingLevel;
     if (this.state.rebirthMode === false) {
-      const rebirthMode = true;
-      this.setState({ rebirthMode });
-    } else {
-      const rebirthMode = false;
-      this.setState({ rebirthMode });
+      rebirthMode = true;
     }
-    console.log(this.state.rebirthMode);
+    let counters = [...this.state.counters];
+    counters.forEach((counter) => {
+      counter.value = counter.minValue;
+    });
+    this.setState({ rebirthMode, counters, rebirthCounter });
+    // console.log(this.state.rebirthMode);
   };
 
   calculateLevel = () => {
@@ -281,11 +323,13 @@ class App extends Component {
         />
         <h6 className="  m-2">
           Enter the actual level of your character to determine how many runes
-          it will take to get to the calculated level.
+          it will take to get to the calculated level. Enter 0 to reset the
+          value.
         </h6>
         <h6 className="  m-2">
           Checking Rebirth will put the calculator in a mode that simulates the
-          Rebirth menu, without using a Lunar Tear.
+          Rebirth menu, without using a Lunar Tear. Checking the box will mostly
+          reset the calculator.
         </h6>
         <h6 className="text-muted m-2">
           Note: The rune values are approximate due to the nature of JavaScript

@@ -7,9 +7,7 @@ function NavBar({
   rebirthMode,
   rebirthCounter,
 }) {
-  //   console.log("NavBar - Rendered");
-  // console.log(actualLevel);
-
+  // TODO: add colors when values are at min and max
   return (
     <div>
       <nav className="navbar navbar-light bg-light">
