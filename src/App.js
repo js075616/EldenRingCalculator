@@ -209,9 +209,7 @@ class App extends Component {
       this.setState({ actualLevel, rebirthCounter });
     } else {
       alert(
-        `Actual character level must be in the range of ${
-          this.state.startingLevel + 1
-        } and 713`
+        `Actual character level must be in the range of ${this.state.startingLevel} and 713`
       );
       actualLevel = 0;
       const rebirthCounter = 0;
