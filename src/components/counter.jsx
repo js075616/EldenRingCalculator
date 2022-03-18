@@ -13,38 +13,33 @@ class Counter extends Component {
   }
 
   handleSubmit(event) {
-    // alert("A name was submitted: " + this.state.value);
     event.preventDefault();
     this.props.onSubmit(this.props.counter, this.state.value);
   }
 
+  // TODO: make counters line up better when there are single digits
   render() {
     return (
       <div className="row ml-1">
-        <h5 className="col-md-1 padding-0 span mt-2 auto">
-          {this.props.counter.name}
-        </h5>
-        <h5 className="col-md-0 padding-0 mb-2">
-          <span className="badge badge-pill m-2 badge-primary">
+        <h5 className="col-md-1 span mt-2 auto">{this.props.counter.name}</h5>
+        <h5 className="col-md-0 mb-2">
+          <span className="badge badge-pill m-2 badge-info">
             {this.props.counter.value}
           </span>
           <button
             onClick={() => this.props.onIncrement(this.props.counter)}
-            className="btn btn-secondary btn-sm m-1"
+            className="btn btn-primary btn-sm m-1"
           >
             +
           </button>
           <button
             onClick={() => this.props.onDecrement(this.props.counter)}
-            className="btn btn-secondary btn-sm m-1 px-2"
+            className="btn btn-primary btn-sm m-1"
           >
             -
           </button>
         </h5>
-        <form
-          onSubmit={this.handleSubmit}
-          className="col-md-0 padding-0 mt-1 ml-1"
-        >
+        <form onSubmit={this.handleSubmit} className="col-md-0 mt-1 ml-1">
           <input
             type="number"
             placeholder="Enter stat"

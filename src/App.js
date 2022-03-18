@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import NavBar from "./components/navbar";
 import Counters from "./components/counters";
 import DropDown from "./components/dropdown";
-// import "./App.css";
 
 class App extends Component {
   state = {
@@ -28,15 +27,9 @@ class App extends Component {
 
   constructor() {
     super();
-    this.handleCurrentChange = this.handleCurrentChange.bind(this);
-    this.handleCurrentSubmit = this.handleCurrentSubmit.bind(this);
-    // console.log("App - Constructor");
+    this.handleActualChange = this.handleActualChange.bind(this);
+    this.handleActualSubmit = this.handleActualSubmit.bind(this);
   }
-
-  // componentDidMount() {
-  //   // Ajax Call
-  //   // console.log("App - Mounted");
-  // }
 
   handleIncrement = (counter) => {
     const counters = [...this.state.counters];
@@ -102,12 +95,12 @@ class App extends Component {
     return counters;
   };
 
-  // TODO: add reset for rebirth and actual level when the starting class is changed
   handleSelect = (selection) => {
     // console.log("Selected", selection);
     let counters;
     let startingLevel;
     let dropName;
+    let rebirthCounter = 0;
     switch (selection) {
       case "hero":
         counters = this.handleCounterUpdate([14, 9, 12, 16, 9, 7, 8, 11]);
@@ -164,7 +157,15 @@ class App extends Component {
         startingLevel = 0;
         dropName = "Starting Class";
     }
-    this.setState({ counters, startingLevel, dropName });
+    if (this.state.actualLevel >= startingLevel) {
+      rebirthCounter = this.state.actualLevel - startingLevel;
+    } else if (this.state.actualLevel !== 0) {
+      alert(
+        "Your actual level is too low for your new starting level, please update it."
+      );
+      this.setState({ actualLevel: 0 });
+    }
+    this.setState({ counters, startingLevel, dropName, rebirthCounter });
   };
 
   handleSubmit = (counter, value) => {
@@ -176,11 +177,6 @@ class App extends Component {
       counters[index] = { ...counter };
       rebirthCounter += counters[index].value - counters[index].minValue;
       if (this.state.rebirthMode) {
-        console.log("Rebirth addition", rebirthCounter);
-        console.log(
-          "Rebirth subtraction",
-          rebirthCounter - value + counters[index].minValue
-        );
         if (rebirthCounter - value + counters[index].minValue >= 0) {
           counters[index].value = value;
           rebirthCounter -= value - counters[index].minValue;
@@ -192,23 +188,31 @@ class App extends Component {
     } else {
       alert(`The stat must be between ${counter.minValue} and 99`);
     }
-    // console.log("Value: ", value);
   };
 
-  handleCurrentChange(event) {
+  handleActualChange(event) {
     this.setState({ actualLevelInput: event.target.value });
     // console.log(this.state.actualLevelInput);
   }
 
-  // TODO: add a message to let the user know the max and min levels
-  handleCurrentSubmit(event) {
+  handleActualSubmit(event) {
     // console.log("Actual level input: ", this.state.actualLevelInput);
     event.preventDefault();
     let actualLevel = this.state.actualLevelInput;
-    if (actualLevel < 714 && actualLevel > this.state.startingLevel) {
+    // console.log(this.state.actualLevelInput);
+    if (actualLevel < 714 && actualLevel >= this.state.startingLevel) {
       const rebirthCounter = actualLevel - this.state.startingLevel;
       this.setState({ actualLevel, rebirthCounter });
+    } else if (actualLevel === "0") {
+      actualLevel = 0;
+      const rebirthCounter = 0;
+      this.setState({ actualLevel, rebirthCounter });
     } else {
+      alert(
+        `Actual character level must be in the range of ${
+          this.state.startingLevel + 1
+        } and 713`
+      );
       actualLevel = 0;
       const rebirthCounter = 0;
       this.setState({ actualLevel, rebirthCounter });
@@ -300,21 +304,18 @@ class App extends Component {
             onSelect={this.handleSelect}
             className="col col-md-2"
           />
-          <form
-            onSubmit={this.handleCurrentSubmit}
-            className="mt-8 ml-3 mb-1 p-0"
-          >
+          <form onSubmit={this.handleActualSubmit} className="mt-8 ml-3 mb-1">
             <input
               type="number"
               placeholder="Enter actual level"
               // value={this.state.value}
-              onChange={this.handleCurrentChange}
+              onChange={this.handleActualChange}
               className="mt-3"
             />
             <label>
               <input
                 type="checkbox"
-                className="m-2 p-2"
+                className="m-2"
                 checked={this.state.rebirthMode}
                 onChange={this.handleCheck}
               />
