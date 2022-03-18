@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import NavBar from "./components/navbar";
 import Counters from "./components/counters";
 import DropDown from "./components/dropdown";
-// import "./App.css";
 
 class App extends Component {
   state = {
@@ -22,42 +21,64 @@ class App extends Component {
     dropName: "Starting Class (Wretch)",
     actualLevel: 0,
     actualLevelInput: 0,
-    // rebirthMode: false,
-    // rebirthCounter: 0,
+    rebirthMode: false,
+    rebirthCounter: 0,
   };
 
   constructor() {
     super();
-    this.handleCurrentChange = this.handleCurrentChange.bind(this);
-    this.handleCurrentSubmit = this.handleCurrentSubmit.bind(this);
-    // console.log("App - Constructor");
+    this.handleActualChange = this.handleActualChange.bind(this);
+    this.handleActualSubmit = this.handleActualSubmit.bind(this);
   }
-
-  // componentDidMount() {
-  //   // Ajax Call
-  //   // console.log("App - Mounted");
-  // }
 
   handleIncrement = (counter) => {
     const counters = [...this.state.counters];
     const index = counters.indexOf(counter);
-    counters[index] = { ...counter };
-    counters[index].value++;
-    if (counters[index].value > 99) {
-      counters[index].value = 99;
+
+    if (this.state.rebirthMode) {
+      let rebirthCounter = this.state.rebirthCounter;
+      if (rebirthCounter > 0) {
+        rebirthCounter--;
+        counters[index] = { ...counter };
+        counters[index].value++;
+        if (counters[index].value > 99) {
+          counters[index].value = 99;
+        }
+      }
+      this.setState({ counters, rebirthCounter });
+    } else {
+      counters[index] = { ...counter };
+      counters[index].value++;
+      if (counters[index].value > 99) {
+        counters[index].value = 99;
+      }
+      this.setState({ counters });
     }
-    this.setState({ counters });
   };
 
   handleDecrement = (counter) => {
     const counters = [...this.state.counters];
     const index = counters.indexOf(counter);
-    counters[index] = { ...counter };
-    counters[index].value--;
-    if (counters[index].value < counters[index].minValue) {
-      counters[index].value = counters[index].minValue;
+
+    if (this.state.rebirthMode) {
+      let rebirthCounter = this.state.rebirthCounter;
+      if (counters[index].value > counters[index].minValue) {
+        rebirthCounter++;
+        counters[index] = { ...counter };
+        counters[index].value--;
+        if (counters[index].value < counters[index].minValue) {
+          counters[index].value = counters[index].minValue;
+        }
+      }
+      this.setState({ counters, rebirthCounter });
+    } else {
+      counters[index] = { ...counter };
+      counters[index].value--;
+      if (counters[index].value < counters[index].minValue) {
+        counters[index].value = counters[index].minValue;
+      }
+      this.setState({ counters });
     }
-    this.setState({ counters });
   };
 
   handleCounterUpdate = (valueArray) => {
@@ -79,6 +100,7 @@ class App extends Component {
     let counters;
     let startingLevel;
     let dropName;
+    let rebirthCounter = 0;
     switch (selection) {
       case "hero":
         counters = this.handleCounterUpdate([14, 9, 12, 16, 9, 7, 8, 11]);
@@ -133,47 +155,89 @@ class App extends Component {
       default:
         counters = this.handleCounterUpdate([0, 0, 0, 0, 0, 0, 0, 0]);
         startingLevel = 0;
-        dropName = "Select your Starting Class";
+        dropName = "Starting Class";
     }
-    this.setState({ counters, startingLevel, dropName });
+    if (this.state.actualLevel >= startingLevel) {
+      rebirthCounter = this.state.actualLevel - startingLevel;
+    } else if (this.state.actualLevel !== 0) {
+      alert(
+        "Your actual level is too low for your new starting level, please update it."
+      );
+      this.setState({ actualLevel: 0 });
+    }
+    this.setState({ counters, startingLevel, dropName, rebirthCounter });
   };
 
   handleSubmit = (counter, value) => {
     if (value < 100 && value >= counter.minValue) {
       const counters = [...this.state.counters];
       const index = counters.indexOf(counter);
+
+      let rebirthCounter = this.state.rebirthCounter;
       counters[index] = { ...counter };
-      counters[index].value = value;
-      this.setState({ counters });
+      rebirthCounter += counters[index].value - counters[index].minValue;
+      if (this.state.rebirthMode) {
+        if (rebirthCounter - value + counters[index].minValue >= 0) {
+          counters[index].value = value;
+          rebirthCounter -= value - counters[index].minValue;
+        }
+      } else {
+        counters[index].value = value;
+      }
+      this.setState({ counters, rebirthCounter });
     } else {
-      alert(`The stat be between ${counter.minValue} and 99`);
+      alert(`The stat must be between ${counter.minValue} and 99`);
     }
-    // console.log("Value: ", value);
   };
 
-  handleCurrentChange(event) {
+  handleActualChange(event) {
     this.setState({ actualLevelInput: event.target.value });
     // console.log(this.state.actualLevelInput);
   }
 
-  handleCurrentSubmit(event) {
-    console.log("Actual level input: ", this.state.actualLevelInput);
+  handleActualSubmit(event) {
+    // console.log("Actual level input: ", this.state.actualLevelInput);
     event.preventDefault();
-    const actualLevel = this.state.actualLevelInput;
-    this.setState({ actualLevel });
-    console.log(this.state.actualLevel);
+    let actualLevel = this.state.actualLevelInput;
+    // console.log(this.state.actualLevelInput);
+    if (actualLevel < 714 && actualLevel >= this.state.startingLevel) {
+      const rebirthCounter = actualLevel - this.state.startingLevel;
+      this.setState({ actualLevel, rebirthCounter });
+    } else if (actualLevel === "0") {
+      actualLevel = 0;
+      const rebirthCounter = 0;
+      this.setState({ actualLevel, rebirthCounter });
+    } else {
+      alert(
+        `Actual character level must be in the range of ${this.state.startingLevel} and 713`
+      );
+      actualLevel = 0;
+      const rebirthCounter = 0;
+      this.setState({ actualLevel, rebirthCounter });
+    }
+    // console.log(this.state.actualLevel);
   }
 
-  // handleCheck = () => {
-  //   if (this.state.rebirthMode === false) {
-  //     const rebirthMode = true;
-  //     this.setState({ rebirthMode });
-  //   } else {
-  //     const rebirthMode = false;
-  //     this.setState({ rebirthMode });
-  //   }
-  //   console.log(this.state.rebirthMode);
-  // };
+  handleCheck = () => {
+    let rebirthMode = false;
+    let rebirthCounter = 0;
+    if (this.state.actualLevel > this.state.startingLevel) {
+      const rebirthCounter = this.state.actualLevel - this.state.startingLevel;
+      this.setState({ rebirthCounter });
+    }
+    if (this.state.rebirthMode === false) {
+      rebirthMode = true;
+    }
+    let counters = [...this.state.counters];
+    counters.forEach((counter) => {
+      counter.value = counter.minValue;
+    });
+    if (this.state.actualLevel >= this.state.startingLevel) {
+      rebirthCounter = this.state.actualLevel - this.state.startingLevel;
+    }
+    this.setState({ rebirthMode, counters, rebirthCounter });
+    // console.log(this.state.rebirthMode);
+  };
 
   calculateLevel = () => {
     let count = this.state.startingLevel;
@@ -233,6 +297,8 @@ class App extends Component {
             this.calculateLevel(),
             this.state.startingLevel
           )}
+          rebirthMode={this.state.rebirthMode}
+          rebirthCounter={this.state.rebirthCounter}
         />
         <div className="ml-2 row">
           <DropDown
@@ -240,41 +306,41 @@ class App extends Component {
             onSelect={this.handleSelect}
             className="col col-md-2"
           />
-          <form
-            onSubmit={this.handleCurrentSubmit}
-            className="mt-8 ml-3 mb-1 p-0"
-          >
+          <form onSubmit={this.handleActualSubmit} className="mt-8 ml-3 mb-1">
             <input
               type="number"
               placeholder="Enter actual level"
               // value={this.state.value}
-              onChange={this.handleCurrentChange}
+              onChange={this.handleActualChange}
               className="mt-3"
             />
-            {/* <label>
+            <label>
               <input
                 type="checkbox"
-                className="m-2 p-2"
+                className="m-2"
                 checked={this.state.rebirthMode}
                 onChange={this.handleCheck}
               />
               Rebirth
-            </label> */}
+            </label>
           </form>
         </div>
         <main className="container"></main>
         <Counters
           counters={this.state.counters}
-          // onReset={this.handleReset}
           onIncrement={this.handleIncrement}
           onDecrement={this.handleDecrement}
-          // onChange={this.handleChange}
           onSubmit={this.handleSubmit}
-          // onDelete={this.handleDelete}
         />
         <h6 className="  m-2">
           Enter the actual level of your character to determine how many runes
-          it will take to get to the calculated level.
+          it will take to get to the calculated level. Enter 0 to reset the
+          value.
+        </h6>
+        <h6 className="  m-2">
+          Checking Rebirth will put the calculator in a mode that simulates the
+          Rebirth menu, without using a Lunar Tear. Checking the box will mostly
+          reset the calculator.
         </h6>
         <h6 className="text-muted m-2">
           Note: The rune values are approximate due to the nature of JavaScript

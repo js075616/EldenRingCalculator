@@ -3,16 +3,9 @@ import Dropdown from "react-bootstrap/Dropdown";
 import React, { Component } from "react";
 
 class DropDown extends Component {
-  //   handleChange = (e) => {
-  //     // const value = e;
-  //     // this.setState({ value });
-  //     // console.log("State:", this.state.value);
-  //     console.log("Clicked:", e);
-  //     return e;
-  //   };
   render() {
     return (
-      <div style={{ display: "block", width: 283, padding: 10 }}>
+      <div style={{ display: "block", width: 283 }}>
         <Dropdown>
           <Dropdown.Toggle variant="primary">
             {this.props.dropName}
