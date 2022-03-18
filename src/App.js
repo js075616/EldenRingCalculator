@@ -222,6 +222,7 @@ class App extends Component {
 
   handleCheck = () => {
     let rebirthMode = false;
+    let rebirthCounter = 0;
     if (this.state.actualLevel > this.state.startingLevel) {
       const rebirthCounter = this.state.actualLevel - this.state.startingLevel;
       this.setState({ rebirthCounter });
@@ -233,7 +234,10 @@ class App extends Component {
     counters.forEach((counter) => {
       counter.value = counter.minValue;
     });
-    this.setState({ rebirthMode, counters });
+    if (this.state.actualLevel >= this.state.startingLevel) {
+      rebirthCounter = this.state.actualLevel - this.state.startingLevel;
+    }
+    this.setState({ rebirthMode, counters, rebirthCounter });
     // console.log(this.state.rebirthMode);
   };
 
