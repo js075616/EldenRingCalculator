@@ -10,7 +10,7 @@ class DropDown extends Component {
           <Dropdown.Toggle variant="primary">
             {this.props.dropName}
           </Dropdown.Toggle>
-          <Dropdown.Menu>
+          <Dropdown.Menu style={{ margin: 0 }}>
             {/* <Dropdown.Item onClick={() => this.props.onSelect("start")}>
               Choose Your Starting Class
             </Dropdown.Item> */}

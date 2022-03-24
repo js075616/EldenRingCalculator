@@ -3,7 +3,7 @@ import NavBar from "./components/navbar";
 import Counters from "./components/counters";
 import DropDown from "./components/dropdown";
 
-class App extends Component {
+class LevelCalculator extends Component {
   state = {
     counters: [
       { name: "Vigor", value: 10, minValue: 10, input: "" },
@@ -149,7 +149,7 @@ class App extends Component {
         break;
       case "sam":
         counters = this.handleCounterUpdate([12, 11, 13, 12, 15, 9, 8, 8]);
-        startingLevel = 7;
+        startingLevel = 9;
         dropName = "Samurai";
         break;
       default:
@@ -360,4 +360,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default LevelCalculator;
