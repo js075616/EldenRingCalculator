@@ -21,7 +21,9 @@ class Counter extends Component {
   render() {
     return (
       <div className="row ml-1">
-        <h5 className="col-md-1 span mt-2 auto">{this.props.counter.name}</h5>
+        <h5 className="col-md-1 mt-2" style={{ minWidth: "20vh" }}>
+          {this.props.counter.name}
+        </h5>
         <h5 className="col-md-0 mb-2">
           <span className="badge badge-pill m-2 badge-info">
             {this.props.counter.value}
@@ -43,7 +45,6 @@ class Counter extends Component {
           <input
             type="number"
             placeholder="Enter stat"
-            // value={this.state.value}
             onChange={this.handleChange}
           />
         </form>

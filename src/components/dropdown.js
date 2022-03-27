@@ -5,7 +5,7 @@ import React, { Component } from "react";
 class DropDown extends Component {
   render() {
     return (
-      <div style={{ display: "block", width: 283, padding: 10 }}>
+      <div style={{ display: "block", minWidth: 215, padding: 10 }}>
         <Dropdown>
           <Dropdown.Toggle variant="primary">
             {this.props.dropName}

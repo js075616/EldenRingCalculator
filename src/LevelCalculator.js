@@ -6,14 +6,14 @@ import DropDown from "./components/dropdown";
 class LevelCalculator extends Component {
   state = {
     counters: [
-      { name: "Vigor", value: 10, minValue: 10, input: "" },
-      { name: "Mind", value: 10, minValue: 10, input: "" },
-      { name: "Endurance", value: 10, minValue: 10, input: "" },
-      { name: "Strength", value: 10, minValue: 10, input: "" },
-      { name: "Dexterity", value: 10, minValue: 10, input: "" },
-      { name: "Intelligence", value: 10, minValue: 10, input: "" },
-      { name: "Faith", value: 10, minValue: 10, input: "" },
-      { name: "Arcane", value: 10, minValue: 10, input: "" },
+      { name: "Vigor", value: 10, minValue: 10},
+      { name: "Mind", value: 10, minValue: 10},
+      { name: "Endurance", value: 10, minValue: 10},
+      { name: "Strength", value: 10, minValue: 10},
+      { name: "Dexterity", value: 10, minValue: 10},
+      { name: "Intelligence", value: 10, minValue: 10},
+      { name: "Faith", value: 10, minValue: 10},
+      { name: "Arcane", value: 10, minValue: 10},
     ],
     earlyRunes: [673, 689, 706, 723, 740, 757, 775, 793, 811, 829, 847],
     startingLevel: 1,
@@ -306,24 +306,6 @@ class LevelCalculator extends Component {
             onSelect={this.handleSelect}
             className="col col-md-2"
           />
-          <form onSubmit={this.handleActualSubmit} className="mt-8 ml-3 mb-1">
-            <input
-              type="number"
-              placeholder="Enter actual level"
-              // value={this.state.value}
-              onChange={this.handleActualChange}
-              className="mt-3"
-            />
-            <label>
-              <input
-                type="checkbox"
-                className="m-2"
-                checked={this.state.rebirthMode}
-                onChange={this.handleCheck}
-              />
-              Rebirth
-            </label>
-          </form>
         </div>
         <main className="container"></main>
         <Counters
@@ -332,12 +314,28 @@ class LevelCalculator extends Component {
           onDecrement={this.handleDecrement}
           onSubmit={this.handleSubmit}
         />
-        <h6 className="  m-2">
+        <form onSubmit={this.handleActualSubmit} className="ml-3">
+          <input
+            type="number"
+            placeholder="Enter actual level"
+            onChange={this.handleActualChange}
+          />
+          <label>
+            <input
+              type="checkbox"
+              className="m-2"
+              checked={this.state.rebirthMode}
+              onChange={this.handleCheck}
+            />
+            Rebirth
+          </label>
+        </form>
+        <h6 className="m-2">
           Enter the actual level of your character to determine how many runes
           it will take to get to the calculated level. Enter 0 to reset the
           value.
         </h6>
-        <h6 className="  m-2">
+        <h6 className="m-2">
           Checking Rebirth will put the calculator in a mode that simulates the
           Rebirth menu, without using a Lunar Tear. Checking the box will mostly
           reset the calculator.
