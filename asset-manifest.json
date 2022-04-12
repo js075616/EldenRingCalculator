@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/EldenRingCalculator/static/css/main.f6744717.css",
+    "main.js": "/EldenRingCalculator/static/js/main.4fd74430.js",
+    "index.html": "/EldenRingCalculator/index.html",
+    "main.f6744717.css.map": "/EldenRingCalculator/static/css/main.f6744717.css.map",
+    "main.4fd74430.js.map": "/EldenRingCalculator/static/js/main.4fd74430.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f6744717.css",
+    "static/js/main.4fd74430.js"
+  ]
+}
